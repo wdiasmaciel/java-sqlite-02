@@ -30,7 +30,8 @@ public class Main {
             System.out.println("Conexão com SQLite estabelecida!");
 
             // Criar uma tabela (usuario):
-            String createTableSQL = """
+            String createTableSQL = 
+            """
                 CREATE TABLE IF NOT EXISTS usuario (
                     id INTEGER PRIMARY KEY AUTOINCREMENT, 
                     nome VARCHAR(256) NOT NULL, 
@@ -41,10 +42,11 @@ public class Main {
             // Criar e executar uma declaração SQL:
             Statement statement = connection.createStatement();
             statement.execute(createTableSQL);
-            System.out.println("Tabela 'usuario' criada ou já existe.");
+            System.out.println("Tabela 'usuario' criada ou já existe!");
 
             // Inserir dados na tabela 'usuario':
-            String insertSQL = """
+            String insertSQL = 
+            """
                 INSERT INTO usuario (nome, nascimento) VALUES 
                 ('Ana', '2000-06-03'), 
                 ('Bruna', '2001-02-17'),
@@ -52,7 +54,7 @@ public class Main {
                 ('Daniel', '2003-10-30');
             """;
             statement.execute(insertSQL);
-            System.out.println("Dados inseridos na tabela 'usuario'.");
+            System.out.println("Dados inseridos na tabela 'usuario'!");
 
             // Consultar dados da tabela 'usuario':
             String selectSQL = "SELECT * FROM usuario;";
@@ -63,27 +65,27 @@ public class Main {
                                    ", Nascimento: " + resultSet.getString("nascimento"));
             }
 
-            // Preparar um statement para inserir novos usuários:
-            String insertNewUserSQL = "INSERT INTO usuario (nome, nascimento) VALUES (?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(insertNewUserSQL);
+            // Inserir novos usuários:
+            String insertSQL = "INSERT INTO usuario (nome, nascimento) VALUES (?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(insertSQL);
 
             // Estrutura de repetição para adicionar novos usuários:
             String continuar;
             do {
-                // Pede o nome e data de nascimento do usuário:
-                System.out.print("Digite o nome do novo usuário: ");
+                // Pedir o nome e data de nascimento do usuário:
+                System.out.print("Informe o nome do novo usuário: ");
                 String nome = scanner.nextLine();
-                System.out.print("Digite a data de nascimento (AAAA-MM-DD): ");
+                System.out.print("Informe a data de nascimento (AAAA-MM-DD): ");
                 String nascimento = scanner.nextLine();
 
-                // Define os valores no PreparedStatement:
+                // Definir os valores no PreparedStatement:
                 preparedStatement.setString(1, nome);
                 preparedStatement.setString(2, nascimento);
                 preparedStatement.executeUpdate();
                 System.out.println("Novo usuário inserido!");
 
-                // Pergunta se deseja continuar inserindo novos usuários:
-                System.out.print("Deseja inserir outro usuário? (sim/não): ");
+                // Perguntar se deseja inserir outro usuário:
+                System.out.print("Deseja informar outro usuário? (sim/não): ");
                 continuar = scanner.nextLine();
             } while (continuar.equalsIgnoreCase("sim"));
 
@@ -159,7 +161,6 @@ public class Main {
         </plugins>
     </build>
 </project>
-
 ```
  
  7) Instalar todas as dependências do projeto `Maven` listadas no arquivo `pom.xml`:
