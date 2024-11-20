@@ -21,6 +21,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        String insertSQL;
         Connection connection = null;
         Scanner scanner = new Scanner(System.in);
 
@@ -45,7 +46,7 @@ public class Main {
             System.out.println("Tabela 'usuario' criada ou já existe!");
 
             // Inserir dados na tabela 'usuario':
-            String insertSQL = 
+            insertSQL = 
             """
                 INSERT INTO usuario (nome, nascimento) VALUES 
                 ('Ana', '2000-06-03'), 
@@ -66,7 +67,7 @@ public class Main {
             }
 
             // Inserir novos usuários:
-            String insertSQL = "INSERT INTO usuario (nome, nascimento) VALUES (?, ?)";
+            insertSQL = "INSERT INTO usuario (nome, nascimento) VALUES (?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(insertSQL);
 
             // Estrutura de repetição para adicionar novos usuários:
