@@ -2,7 +2,7 @@
 
 1) Criar um repositório público para o projeto no `GitHub`. Ao criar o projeto, marcar as opções `Public` e `Add a README file`. No item `Add .gitignore`, selecionar a opção `Maven`. Em seguida, clicar no botão `Code` e iniciar um `Codespace` clicando em `Create a codespace on main`.
 
-2) No `Codespace`, instalar a extensão (plugin) VS Code `SQLite Viewer for VS Code`:
+2) No `Codespace`, instalar a extensão (_plugin_) VS Code `SQLite Viewer for VS Code`:
 ![Alt: extensão (plugin) SQLite Viewer for VS Code](SQLiteViewerForVSCode.png)
 
 3) No `Codespace`, criar a estrura de diretório:
