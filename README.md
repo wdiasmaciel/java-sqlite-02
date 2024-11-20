@@ -3,7 +3,7 @@
 1) Criar um repositório público para o projeto no `GitHub`. Ao criar o projeto, marcar as opções `Public` e `Add a README file`. No item `Add .gitignore`, selecionar a opção `Maven`. Em seguida, clicar no botão `Code` e iniciar um `Codespace` clicando em `Create a codespace on main`.
 
 2) No `Codespace`, instalar a extensão (_plugin_) VS Code `SQLite Viewer for VS Code`:
-![Alt: extensão (plugin) SQLite Viewer for VS Code](SQLiteViewerForVSCode.png)
+![Alt: extensão (plugin) SQLite Viewer for VS Code.](SQLiteViewerForVSCode.png)
 
 3) No `Codespace`, criar a estrura de diretório:
 ```
@@ -14,12 +14,15 @@
 ```java
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Connection connection = null;
+        Scanner scanner = new Scanner(System.in);
 
         try {
             // Conectar ao banco de dados SQLite:
@@ -27,13 +30,12 @@ public class Main {
             System.out.println("Conexão com SQLite estabelecida!");
 
             // Criar uma tabela (usuario):
-            String createTableSQL = 
-            """
-               CREATE TABLE IF NOT EXISTS usuario (
-                  id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                  nome VARCHAR(256) NOT NULL, 
-                  nascimento TEXT
-               );
+            String createTableSQL = """
+                CREATE TABLE IF NOT EXISTS usuario (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                    nome VARCHAR(256) NOT NULL, 
+                    nascimento TEXT
+                );
             """;
 
             // Criar e executar uma declaração SQL:
@@ -42,13 +44,12 @@ public class Main {
             System.out.println("Tabela 'usuario' criada ou já existe.");
 
             // Inserir dados na tabela 'usuario':
-            String insertSQL = 
-            """
-               INSERT INTO usuario (nome, nascimento) VALUES 
-               ('Ana', '2000-06-03'), 
-               ('Bruna', '2001-02-17'),
-               ('Carlos', '2002-04-21'),
-               ('Daniel', '2003-10-30');
+            String insertSQL = """
+                INSERT INTO usuario (nome, nascimento) VALUES 
+                ('Ana', '2000-06-03'), 
+                ('Bruna', '2001-02-17'),
+                ('Carlos', '2002-04-21'),
+                ('Daniel', '2003-10-30');
             """;
             statement.execute(insertSQL);
             System.out.println("Dados inseridos na tabela 'usuario'.");
@@ -61,12 +62,40 @@ public class Main {
                                    ", Nome: " + resultSet.getString("nome") +
                                    ", Nascimento: " + resultSet.getString("nascimento"));
             }
+
+            // Preparar um statement para inserir novos usuários:
+            String insertNewUserSQL = "INSERT INTO usuario (nome, nascimento) VALUES (?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(insertNewUserSQL);
+
+            // Estrutura de repetição para adicionar novos usuários:
+            String continuar;
+            do {
+                // Pede o nome e data de nascimento do usuário:
+                System.out.print("Digite o nome do novo usuário: ");
+                String nome = scanner.nextLine();
+                System.out.print("Digite a data de nascimento (AAAA-MM-DD): ");
+                String nascimento = scanner.nextLine();
+
+                // Define os valores no PreparedStatement:
+                preparedStatement.setString(1, nome);
+                preparedStatement.setString(2, nascimento);
+                preparedStatement.executeUpdate();
+                System.out.println("Novo usuário inserido!");
+
+                // Pergunta se deseja continuar inserindo novos usuários:
+                System.out.print("Deseja inserir outro usuário? (sim/não): ");
+                continuar = scanner.nextLine();
+            } while (continuar.equalsIgnoreCase("sim"));
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
                 if (connection != null) {
                     connection.close();
+                }
+                if (scanner != null) {
+                    scanner.close();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -76,7 +105,10 @@ public class Main {
 }
 ```
 
-5) Criar o arquivo `pom.xml` com o conteúdo abaixo para projetos que usam `Maven` no diretório raiz do projeto:
+5) No `Codespace`, instalar a extensão (_plugin_) VS Code `Extension Pack for Java`:
+![alt text](ExtensionPackForJava.png)
+
+6) Criar o arquivo `pom.xml` com o conteúdo abaixo para projetos que usam `Maven` no diretório raiz do projeto:
 ```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -130,24 +162,37 @@ public class Main {
 
 ```
  
- 6) Instalar todas as dependências do projeto `Maven` listadas no arquivo `pom.xml`:
+ 7) Instalar todas as dependências do projeto `Maven` listadas no arquivo `pom.xml`:
 ```
   mvn clean install
 ```
 
- 7) Compilar o projeto:
+ 8) Compilar o projeto:
  ```
   mvn clean compile
  ```
 
- 8) Executar o projeto:
+ 9) Executar o projeto:
  ```
   mvn exec:java -Dexec.mainClass="Main"
  ```
  
- 9) Saída:
+ 10) Saída:
  
  ![Alt: saída do programa](SaidaDoPrograma.png)
 
- 10) Clicar no arquivo `teste.db`. No painel lateral direito, clicar na tabela `usuario`. Observar os registros inseridos na tabela:
+ 11) Clicar no arquivo `teste.db`. No painel lateral direito, clicar na tabela `usuario`. Observar os registros inseridos na tabela:
 ![Alt: registros da tabela usuário.](TabelaUsuario.png)
+
+12) Executar:
+```
+  git add .
+```
+
+```
+  git commit -m "mensagem"
+```
+
+```
+  git push
+```
